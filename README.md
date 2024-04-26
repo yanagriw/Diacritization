@@ -1,6 +1,6 @@
 # Diacritization
 
-The goal of the diacritization task is to learn to add diacritics to the given Czech text.
+The goal of the diacritization task is to learn to add diacritics to the given Czech text. I use a small collection of fiction books for training.
 
 Accuracy achieved: 95.39%
 
