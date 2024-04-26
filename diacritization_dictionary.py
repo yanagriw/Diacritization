@@ -12,11 +12,9 @@ import sklearn.preprocessing
 import numpy as np
 
 parser = argparse.ArgumentParser()
-# These arguments will be set appropriately by ReCodEx, even if you change them.
 parser.add_argument("--predict", default="fiction-train.txt", type=str, help="Path to the dataset to predict")
 parser.add_argument("--recodex", default=False, action="store_true", help="Running in ReCodEx")
 parser.add_argument("--seed", default=42, type=int, help="Random seed")
-# For these and any other arguments you add, ReCodEx will keep your default value.
 parser.add_argument("--model_path", default="diacritization.model", type=str, help="Model path")
 
 
@@ -30,11 +28,11 @@ class Dataset:
     def __init__(self,
                  name="fiction-train.txt",
                  url="https://ufal.mff.cuni.cz/~straka/courses/npfl129/2324/datasets/"):
-        # if not os.path.exists(name):
-        #     print("Downloading dataset {}...".format(name), file=sys.stderr)
-        #     licence_name = name.replace(".txt", ".LICENSE")
-        #     urllib.request.urlretrieve(url + licence_name, filename=licence_name)
-        #     urllib.request.urlretrieve(url + name, filename=name)
+        if not os.path.exists(name):
+            print("Downloading dataset {}...".format(name), file=sys.stderr)
+            licence_name = name.replace(".txt", ".LICENSE")
+            urllib.request.urlretrieve(url + licence_name, filename=licence_name)
+            urllib.request.urlretrieve(url + name, filename=name)
 
         # Load the dataset and split it into `data` and `target`.
         with open(name, "r", encoding="utf-8-sig") as dataset_file:
@@ -46,11 +44,11 @@ class Dictionary:
     def __init__(self,
                  name="fiction-dictionary.txt",
                  url="https://ufal.mff.cuni.cz/~straka/courses/npfl129/2223/datasets/"):
-        # if not os.path.exists(name):
-        #     print("Downloading dataset {}...".format(name), file=sys.stderr)
-        #     licence_name = name.replace(".txt", ".LICENSE")
-        #     urllib.request.urlretrieve(url + licence_name, filename=licence_name)
-        #     urllib.request.urlretrieve(url + name, filename=name)
+        if not os.path.exists(name):
+            print("Downloading dataset {}...".format(name), file=sys.stderr)
+            licence_name = name.replace(".txt", ".LICENSE")
+            urllib.request.urlretrieve(url + licence_name, filename=licence_name)
+            urllib.request.urlretrieve(url + name, filename=name)
 
         # Load the dictionary to `variants`
         self.variants = {}
@@ -160,7 +158,7 @@ def main(args: argparse.Namespace) -> Optional[str]:
         np.random.seed(args.seed)
         train = Dataset()
 
-        # TODO: Train a model on the given dataset and store it in `model`.
+        Train a model on the given dataset and store it in `model`.
 
         train_data, train_target = parse_data(train.data, train.target, target_needed=True)
 
@@ -179,8 +177,7 @@ def main(args: argparse.Namespace) -> Optional[str]:
         with lzma.open(args.model_path, "rb") as model_file:
             model = pickle.load(model_file)
 
-        # TODO: Generate `predictions` with the test set predictions. Specifically,
-        # produce a diacritized `str` with exactly the same number of words as `test.data`.
+        # Generate `predictions` with the test set predictions
         text = reproduce_text(test.data, model, d)
 
         with open("output.txt", "w") as file:
